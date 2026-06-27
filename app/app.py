@@ -206,7 +206,7 @@ def display_results(results, adata):
                     if de_df.empty:
                         st.warning("No DE results available for this group.")
                     else:
-                    st.dataframe(de_df.head(20), use_container_width=True)
+                        st.dataframe(de_df.head(20), use_container_width=True)
                     
                     # Volcano plot
                     fig, ax = plt.subplots(figsize=(10, 6))
