@@ -71,18 +71,21 @@ def run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, u
         
         # Load data
         if use_demo:
-            st.info("📊 Loading pre-processed PBMC 3k demo (fast)...")
+            st.info("📊 Loading PBMC 3k demo dataset...")
             
             @st.cache_data
-            def load_fast_demo():
+            def load_pbmc_demo():
                 import scanpy as sc
-                adata = sc.datasets.pbmc3k_processed()
+                # Use RAW counts (not processed) so pipeline works
+                adata = sc.datasets.pbmc3k()
+                
+                # Save temporarily for pipeline
                 temp_path = Path("outputs/demo_data.h5ad")
                 temp_path.parent.mkdir(parents=True, exist_ok=True)
                 adata.write(temp_path)
                 return str(temp_path)
             
-            file_path = load_fast_demo()
+            file_path = load_pbmc_demo()
             st.success("✅ Demo data loaded!")
         else:
             # Save uploaded file temporarily
