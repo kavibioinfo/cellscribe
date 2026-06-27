@@ -71,18 +71,20 @@ def run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, u
         
         # Load data
         if use_demo:
-            st.info("📊 Downloading small demo dataset...")
-    
-            demo_url = "https://github.com/chanzuckerberg/cellxgene/raw/main/dataset.pbmc3k.h5ad"
-        demo_path = Path("outputs/demo_data.h5ad")
-    
-            if not demo_path.exists():
-            import urllib.request
-            urllib.request.urlretrieve(demo_url, demo_path)
-    
-        file_path = str(demo_path)
-         st.success("✅ Demo data ready!")
-         else:
+            st.info("📊 Loading pre-processed PBMC 3k demo (fast)...")
+            
+            @st.cache_data
+            def load_fast_demo():
+                import scanpy as sc
+                adata = sc.datasets.pbmc3k_processed()
+                temp_path = Path("outputs/demo_data.h5ad")
+                temp_path.parent.mkdir(parents=True, exist_ok=True)
+                adata.write(temp_path)
+                return str(temp_path)
+            
+            file_path = load_fast_demo()
+            st.success("✅ Demo data loaded!")
+        else:
             # Save uploaded file temporarily
             temp_path = Path("outputs/uploaded_data") / uploaded_file.name
             temp_path.parent.mkdir(parents=True, exist_ok=True)
