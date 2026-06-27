@@ -71,8 +71,21 @@ def run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, u
         
         # Load data
         if use_demo:
-            file_path = "data/sample/filtered_gene_bc_matrices/hg19/matrix.mtx"
-            st.info("📊 Using PBMC 3k demo dataset")
+            st.info("📊 Loading PBMC 3k demo dataset from scanpy...")
+            import scanpy as sc
+    
+            # Download built-in dataset (cached after first run)
+            @st.cache_data
+            def load_pbmc_demo():
+                adata = sc.datasets.pbmc3k()
+                # Save temporarily for pipeline
+                temp_path = Path("outputs/demo_data.h5ad")
+                temp_path.parent.mkdir(parents=True, exist_ok=True)
+                adata.write(temp_path)
+                return str(temp_path)
+    
+            file_path = load_pbmc_demo()
+            st.success("✅ Demo data loaded!")
         else:
             # Save uploaded file temporarily
             temp_path = Path("outputs/uploaded_data") / uploaded_file.name
