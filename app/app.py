@@ -203,25 +203,38 @@ def display_results(results, adata):
                 de_file = f"outputs/de_{safe_name}.csv"
                 if Path(de_file).exists():
                     de_df = pd.read_csv(de_file)
+                    if de_df.empty:
+                        st.warning("No DE results available for this group.")
+                    else:
                     st.dataframe(de_df.head(20), use_container_width=True)
                     
                     # Volcano plot
                     fig, ax = plt.subplots(figsize=(10, 6))
-                    pvals_adj = de_df['pvals_adj'].replace(0, 1e-300)
-                    scatter = ax.scatter(
-                        de_df['logfoldchanges'], 
-                        -np.log10(pvals_adj),
-                        c=de_df['scores'],
-                        cmap='viridis',
-                        alpha=0.6
-                    )
-                    ax.set_xlabel('Log2 Fold Change')
-                    ax.set_ylabel('-Log10 Adjusted P-value')
-                    ax.set_title(f'DE Genes: {group}')
-                    ax.axhline(y=-np.log10(0.05), color='r', linestyle='--', label='p=0.05')
-                    ax.legend()
-                    plt.colorbar(scatter, label='Score')
-                    st.pyplot(fig)
+                    
+                    # Clean data - remove NaN values
+                    clean_df = de_df.dropna(subset=['logfoldchanges', 'pvals_adj', 'scores'])
+                    
+                    if len(clean_df) == 0:
+                        st.warning("No valid data points for volcano plot after removing NaN values.")
+                    else:
+                        # Replace 0 p-values with very small number
+                        pvals_clean = clean_df['pvals_adj'].replace(0, 1e-300)
+                        
+                        scatter = ax.scatter(
+                            clean_df['logfoldchanges'], 
+                            -np.log10(pvals_clean),
+                            c=clean_df['scores'],
+                            cmap='viridis',
+                            alpha=0.6,
+                            edgecolors='none'
+                        )
+                        ax.set_xlabel('Log2 Fold Change')
+                        ax.set_ylabel('-Log10 Adjusted P-value')
+                        ax.set_title(f'DE Genes: {group}')
+                        ax.axhline(y=-np.log10(0.05), color='r', linestyle='--', label='p=0.05')
+                        ax.legend()
+                        plt.colorbar(scatter, label='Score')
+                        st.pyplot(fig)
         else:
             st.info("DE analysis not available.")
     
