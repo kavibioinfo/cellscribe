@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CellScribe - Automated Single-Cell RNA-seq Analysis</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <span class="dna-icon">🧬</span>
+                <span>CellScribe</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#tech">Tech Stack</a>
+                <a href="#demo">Demo</a>
+                <a href="https://github.com/kavibioinfo/cellscribe" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+                <a href="https://cellscribe.ayushnexa.com" class="btn-primary">Launch App</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="badge">🚀 Open Source Bioinformatics Tool</div>
+                <h1>Automated Single-Cell RNA-seq Analysis</h1>
+                <p class="subtitle">
+                    From raw counts to cell type annotation in minutes. 
+                    Powered by deep learning and automated bioinformatics pipelines.
+                </p>
+                <div class="hero-buttons">
+                    <a href="https://cellscribe.ayushnexa.com" class="btn-primary btn-large">
+                        <i class="fas fa-rocket"></i> Try Live Demo
+                    </a>
+                    <a href="https://github.com/kavibioinfo/cellscribe" class="btn-secondary btn-large" target="_blank">
+                        <i class="fab fa-github"></i> View Code
+                    </a>
+                </div>
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-number">42+</span>
+                        <span class="stat-label">Cell Types</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">80%</span>
+                        <span class="stat-label">Avg Confidence</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">&lt;5min</span>
+                        <span class="stat-label">Analysis Time</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="code-preview">
+                    <div class="code-header">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                        <span class="code-title">pipeline.py</span>
+                    </div>
+                    <pre><code><span class="comment"># CellScribe Pipeline</span>
+<span class="keyword">from</span> cellscribe <span class="keyword">import</span> run_cellscribe
+
+<span class="comment"># One command = Full analysis</span>
+results = run_cellscribe(
+    file_path=<span class="string">"pbmc3k.h5ad"</span>,
+    use_scvi=<span class="keyword">True</span>,
+    annotate=<span class="keyword">True</span>
+)
+
+<span class="comment"># Output: Clusters, Cell Types, DE Genes</span></code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2>What CellScribe Does</h2>
+            <p class="section-subtitle">End-to-end single-cell transcriptomics pipeline</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📁</div>
+                    <h3>Multi-Format Input</h3>
+                    <p>Supports .h5ad, .h5 (10x), .mtx (Matrix Market), and .csv files</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔬</div>
+                    <h3>Automated QC</h3>
+                    <p>Quality control, normalization, and feature selection automatically</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Deep Learning</h3>
+                    <p>scVI variational autoencoders for batch correction and latent representation</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Cell Type Annotation</h3>
+                    <p>CellTypist integration predicts 42+ immune cell types with confidence scores</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Differential Expression</h3>
+                    <p>Wilcoxon rank-sum test with volcano plots and adjusted p-values</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>Publication Plots</h3>
+                    <p>UMAP, violin plots, heatmaps, and interactive cell type charts</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section id="tech" class="tech-stack">
+        <div class="container">
+            <h2>Built With Modern Bioinformatics Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <i class="fab fa-python"></i>
+                    <span>Python 3.11</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-logo">🔬</span>
+                    <span>Scanpy</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-logo">🧬</span>
+                    <span>AnnData</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-logo">🤖</span>
+                    <span>scVI</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-logo">🎯</span>
+                    <span>CellTypist</span>
+                </div>
+                <div class="tech-item">
+                    <span class="tech-logo">📊</span>
+                    <span>Streamlit</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Plotly</span>
+                </div>
+                <div class="tech-item">
+                    <i class="fas fa-dna"></i>
+                    <span>Leiden</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pipeline Visualization -->
+    <section class="pipeline">
+        <div class="container">
+            <h2>Pipeline Architecture</h2>
+            <div class="pipeline-flow">
+                <div class="pipeline-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Raw Counts</h4>
+                        <p>.h5ad, .h5, .mtx</p>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>QC & Normalize</h4>
+                        <p>Filter, log1p, HVGs</p>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>scVI Integration</h4>
+                        <p>VAE latent space</p>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>Clustering</h4>
+                        <p>Leiden algorithm</p>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h4>CellTypist</h4>
+                        <p>42+ cell types</p>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="pipeline-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h4>DE & Plots</h4>
+                        <p>Volcano, UMAP</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section id="demo" class="cta">
+        <div class="container">
+            <h2>See It In Action</h2>
+            <p>Upload your single-cell data or try the demo dataset</p>
+            <div class="cta-buttons">
+                <a href="https://cellscribe.ayushnexa.com" class="btn-primary btn-large">
+                    <i class="fas fa-external-link-alt"></i> Launch CellScribe
+                </a>
+                <a href="https://github.com/kavibioinfo/cellscribe" class="btn-secondary btn-large" target="_blank">
+                    <i class="fab fa-github"></i> Star on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="dna-icon">🧬</span>
+                    <span>CellScribe</span>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/kavibioinfo/cellscribe" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/ayushnexaofficial" target="_blank">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+            <p class="copyright">Built by Ayush Kumar • Open Source Bioinformatics</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
