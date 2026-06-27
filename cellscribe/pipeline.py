@@ -244,6 +244,27 @@ class CellScribePipeline:
         
         if visualize:
             self.generate_visualizations()
+            
+        if hasattr(self.adata.X, 'toarray'):
+            data_check = self.adata.X.toarray()
+        else:
+            data_check = self.adata.X
+        
+        # If data has negative values or NaN, it's likely already log-normalized
+        has_negative = (data_check < 0).any() if hasattr(data_check, 'any') else False
+        has_nan = np.isnan(data_check).any() if hasattr(data_check, 'any') else False
+        
+        if has_negative or has_nan:
+            logger.warning("Data appears to be pre-processed. Skipping normalization.")
+            # Store raw if not already stored
+            if self.adata.raw is None:
+                self.adata.raw = self.adata.copy()
+        else:
+            # Step 3: Normalize (only if raw counts)
+            self.normalize_and_scale()
+        
+        # Step 4: Feature selection (always run)
+        self.select_features(n_top_genes=n_top_genes)
         
         output_path = self.output_dir / "processed_data.h5ad"
         self.adata.write(output_path)

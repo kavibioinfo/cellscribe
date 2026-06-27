@@ -21,20 +21,9 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
-st.markdown("""
-<style>
-    .main-header {
-        font-size: 3rem;
-        font-weight: bold;
-        color: #1f77b4;
-    }
-    .sub-header {
-        font-size: 1.2rem;
-        color: #666;
-    }
-</style>
-""", unsafe_allow_html=True)
+# Use native Streamlit styling instead of custom CSS
+st.title("🧬 CellScribe")
+st.caption("Automated Single-Cell RNA-seq Analysis & Cell Type Annotation")
 
 def main():
     st.markdown('<p class="main-header">🧬 CellScribe</p>', unsafe_allow_html=True)
