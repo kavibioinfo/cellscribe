@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: cellscribe
+    runtime: docker
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    healthCheckPath: /_stcore/health

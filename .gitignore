@@ -1,0 +1,13 @@
+venv/
+outputs/
+data/
+.git/
+__pycache__/
+*.pyc
+.DS_Store
+*.egg-info/
+dist/
+build/
+*.h5ad
+*.mtx
+*.tar.gz
