@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from cellscribe.pipeline import CellScribePipeline
 
 # Demo dataset path - LOCAL FILE (no internet download)
-DEMO_DATASET = str(Path(__file__).parent.parent / "data" / "sample" / "demo_pbmc.h5ad")
+DEMO_DATASET = str(Path(__file__).parent.parent / "data" / "sample" / "pbmc3k_raw.h5ad")
 
 
 def run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, use_scvi, use_demo):
