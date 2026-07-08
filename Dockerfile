@@ -12,10 +12,11 @@ RUN apt-get update && apt-get install -y \
 
 # Upgrade pip and build tools
 COPY requirements.txt .
+RUN pip install --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
 # Install Python packages using PEP 517
-RUN pip install --no-cache-dir --use-pep517 -r requirements.txt
+RUN pip install --prefer-binary -r requirements.txt
 
 # Copy the rest of the app
 COPY . .
