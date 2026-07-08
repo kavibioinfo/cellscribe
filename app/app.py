@@ -20,41 +20,6 @@ from cellscribe.pipeline import CellScribePipeline
 # Demo dataset path - LOCAL FILE (no internet download)
 DEMO_DATASET = str(Path(__file__).parent.parent / "data" / "sample" / "demo_pbmc.h5ad")
 
-st.set_page_config(
-    page_title="CellScribe",
-    page_icon="🧬",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-# Single clean header
-st.title("🧬 CellScribe")
-st.caption("Automated Single-Cell RNA-seq Analysis & Cell Type Annotation")
-st.markdown("---")
-
-st.sidebar.header("📁 Upload Data")
-
-# File upload
-uploaded_file = st.sidebar.file_uploader(
-    "Upload single-cell data",
-    type=['h5ad', 'h5', 'mtx', 'csv'],
-    help="Supported: .h5ad, .h5 (10x), .mtx (Matrix Market), .csv"
-)
-
-# Parameters
-st.sidebar.header("⚙️ Parameters")
-min_genes = st.sidebar.slider("Min genes per cell", 50, 1000, 200)
-max_genes = st.sidebar.slider("Max genes per cell", 1000, 15000, 8000)
-n_top_genes = st.sidebar.slider("Highly variable genes", 500, 5000, 2000)
-resolution = st.sidebar.slider("Clustering resolution", 0.1, 2.0, 1.0, 0.1)
-use_scvi = st.sidebar.checkbox("Use scVI batch correction", value=False)
-
-# Demo data option
-use_demo = st.sidebar.checkbox("Use demo data (PBMC 3k)", value=False)
-
-if uploaded_file or use_demo:
-    run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, use_scvi, use_demo)
-
 
 def run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, use_scvi, use_demo):
     with st.spinner("Running CellScribe pipeline... This may take 1-2 minutes"):
@@ -271,6 +236,43 @@ def display_results(results, adata):
                             file_name="{}.png".format(plot_name),
                             mime="image/png"
                         )
+
+
+def main():
+    st.set_page_config(
+        page_title="CellScribe",
+        page_icon="🧬",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
+    
+    # Single clean header
+    st.title("🧬 CellScribe")
+    st.caption("Automated Single-Cell RNA-seq Analysis & Cell Type Annotation")
+    st.markdown("---")
+    
+    st.sidebar.header("📁 Upload Data")
+    
+    # File upload
+    uploaded_file = st.sidebar.file_uploader(
+        "Upload single-cell data",
+        type=['h5ad', 'h5', 'mtx', 'csv'],
+        help="Supported: .h5ad, .h5 (10x), .mtx (Matrix Market), .csv"
+    )
+    
+    # Parameters
+    st.sidebar.header("⚙️ Parameters")
+    min_genes = st.sidebar.slider("Min genes per cell", 50, 1000, 200)
+    max_genes = st.sidebar.slider("Max genes per cell", 1000, 15000, 8000)
+    n_top_genes = st.sidebar.slider("Highly variable genes", 500, 5000, 2000)
+    resolution = st.sidebar.slider("Clustering resolution", 0.1, 2.0, 1.0, 0.1)
+    use_scvi = st.sidebar.checkbox("Use scVI batch correction", value=False)
+    
+    # Demo data option
+    use_demo = st.sidebar.checkbox("Use demo data (PBMC 3k)", value=False)
+    
+    if uploaded_file or use_demo:
+        run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, use_scvi, use_demo)
 
 
 if __name__ == "__main__":
