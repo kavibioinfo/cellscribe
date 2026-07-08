@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 CellScribe - Streamlit Web Application
 """
@@ -7,12 +8,17 @@ import sys
 from pathlib import Path
 import pandas as pd
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 # Add parent directory to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from cellscribe.pipeline import CellScribePipeline
+
+# Demo dataset path - LOCAL FILE (no internet download)
+DEMO_DATASET = str(Path(__file__).parent.parent / "data" / "sample" / "demo_pbmc.h5ad")
 
 st.set_page_config(
     page_title="CellScribe",
@@ -21,39 +27,37 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Use native Streamlit styling instead of custom CSS
+# Single clean header
 st.title("🧬 CellScribe")
 st.caption("Automated Single-Cell RNA-seq Analysis & Cell Type Annotation")
+st.markdown("---")
 
-def main():
-    st.markdown('<p class="main-header">🧬 CellScribe</p>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">Automated Single-Cell RNA-seq Analysis & Cell Type Annotation</p>', unsafe_allow_html=True)
-    
-    st.sidebar.header("📁 Upload Data")
-    
-    # File upload
-    uploaded_file = st.sidebar.file_uploader(
-        "Upload single-cell data",
-        type=['h5ad', 'h5', 'mtx', 'csv'],
-        help="Supported: .h5ad, .h5 (10x), .mtx (Matrix Market), .csv"
-    )
-    
-    # Parameters
-    st.sidebar.header("⚙️ Parameters")
-    min_genes = st.sidebar.slider("Min genes per cell", 100, 1000, 200)
-    max_genes = st.sidebar.slider("Max genes per cell", 5000, 15000, 8000)
-    n_top_genes = st.sidebar.slider("Highly variable genes", 1000, 5000, 2000)
-    resolution = st.sidebar.slider("Clustering resolution", 0.1, 2.0, 1.0, 0.1)
-    use_scvi = st.sidebar.checkbox("Use scVI batch correction", value=False)
-    
-    # Demo data option
-    use_demo = st.sidebar.checkbox("Use demo data (PBMC 3k)", value=False)
-    
-    if uploaded_file or use_demo:
-        run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, use_scvi, use_demo)
+st.sidebar.header("📁 Upload Data")
+
+# File upload
+uploaded_file = st.sidebar.file_uploader(
+    "Upload single-cell data",
+    type=['h5ad', 'h5', 'mtx', 'csv'],
+    help="Supported: .h5ad, .h5 (10x), .mtx (Matrix Market), .csv"
+)
+
+# Parameters
+st.sidebar.header("⚙️ Parameters")
+min_genes = st.sidebar.slider("Min genes per cell", 50, 1000, 200)
+max_genes = st.sidebar.slider("Max genes per cell", 1000, 15000, 8000)
+n_top_genes = st.sidebar.slider("Highly variable genes", 500, 5000, 2000)
+resolution = st.sidebar.slider("Clustering resolution", 0.1, 2.0, 1.0, 0.1)
+use_scvi = st.sidebar.checkbox("Use scVI batch correction", value=False)
+
+# Demo data option
+use_demo = st.sidebar.checkbox("Use demo data (PBMC 3k)", value=False)
+
+if uploaded_file or use_demo:
+    run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, use_scvi, use_demo)
+
 
 def run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, use_scvi, use_demo):
-    with st.spinner("Running CellScribe pipeline..."):
+    with st.spinner("Running CellScribe pipeline... This may take 1-2 minutes"):
         progress_bar = st.progress(0)
         
         pipeline = CellScribePipeline(output_dir="outputs")
@@ -62,19 +66,12 @@ def run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, u
         if use_demo:
             st.info("📊 Loading PBMC 3k demo dataset...")
             
-            @st.cache_data
-            def load_pbmc_demo():
-                import scanpy as sc
-                # Use RAW counts (not processed) so pipeline works
-                adata = sc.datasets.pbmc3k()
-                
-                # Save temporarily for pipeline
-                temp_path = Path("outputs/demo_data.h5ad")
-                temp_path.parent.mkdir(parents=True, exist_ok=True)
-                adata.write(temp_path)
-                return str(temp_path)
+            if not Path(DEMO_DATASET).exists():
+                st.error("Demo dataset not found at: {}".format(DEMO_DATASET))
+                st.info("Please run: python create_demo_data.py")
+                return
             
-            file_path = load_pbmc_demo()
+            file_path = DEMO_DATASET
             st.success("✅ Demo data loaded!")
         else:
             # Save uploaded file temporarily
@@ -83,7 +80,7 @@ def run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, u
             with open(temp_path, "wb") as f:
                 f.write(uploaded_file.getvalue())
             file_path = str(temp_path)
-            st.info(f"📊 Loaded: {uploaded_file.name}")
+            st.info("📊 Loaded: {}".format(uploaded_file.name))
         
         progress_bar.progress(10)
         
@@ -106,8 +103,10 @@ def run_analysis(uploaded_file, min_genes, max_genes, n_top_genes, resolution, u
             display_results(results, pipeline.adata)
             
         except Exception as e:
-            st.error(f"❌ Error: {str(e)}")
-            raise
+            st.error("❌ Error: {}".format(str(e)))
+            import traceback
+            st.code(traceback.format_exc())
+
 
 def display_results(results, adata):
     st.header("📊 Analysis Results")
@@ -129,7 +128,9 @@ def display_results(results, adata):
     
     with tab1:
         st.subheader("Quality Control")
-        if 'plots' in results and 'qc' in results['plots']:
+        if 'plots' in results and 'qc_metrics' in results['plots']:
+            st.image(results['plots']['qc_metrics'], use_container_width=True)
+        elif 'plots' in results and 'qc' in results['plots']:
             st.image(results['plots']['qc'], use_container_width=True)
         
         # QC table
@@ -149,84 +150,100 @@ def display_results(results, adata):
         col1, col2 = st.columns(2)
         with col1:
             if 'plots' in results and 'umap_clusters' in results['plots']:
-                st.image(results['plots']['umap_clusters'], caption="Clusters", use_container_width=True)
+                st.image(results['plots']['umap_clusters'], caption="Clusters & Cell Types", use_container_width=True)
         with col2:
-            if 'plots' in results and 'umap_cell_types' in results['plots']:
-                st.image(results['plots']['umap_cell_types'], caption="Cell Types", use_container_width=True)
+            # Show cell type distribution on UMAP if available
+            if 'cell_type' in adata.obs.columns:
+                st.write("**Cell Type Distribution**")
+                cell_type_counts = adata.obs['cell_type'].value_counts()
+                st.bar_chart(cell_type_counts)
     
     with tab3:
         st.subheader("Cell Type Annotation")
         if 'annotation' in results:
             annotation = results['annotation']
-            st.write(f"**Method:** {annotation['method']}")
-            st.write(f"**Mean Confidence:** {annotation['mean_confidence']:.3f}")
+            st.write("**Method:** {}".format(annotation['method']))
             
-            # Cell type counts
-            cell_types_df = pd.DataFrame({
-                'Cell Type': list(annotation['cell_types'].keys()),
-                'Count': list(annotation['cell_types'].values())
-            }).sort_values('Count', ascending=False)
+            # Handle mean_confidence safely
+            mean_conf = annotation.get('mean_confidence', 'N/A')
+            if isinstance(mean_conf, float):
+                st.write("**Mean Confidence:** {:.3f}".format(mean_conf))
+            else:
+                st.write("**Mean Confidence:** {}".format(mean_conf))
             
-            st.dataframe(cell_types_df, use_container_width=True)
-            
-            # Bar chart
-            st.bar_chart(cell_types_df.set_index('Cell Type'))
-            
-            # Pie chart
-            if 'plots' in results and 'cell_types' in results['plots']:
-                with open(results['plots']['cell_types'], 'r', encoding='utf-8') as f:
-                    html_content = f.read()
-                st.components.v1.html(html_content, height=600)
+            # Cell type counts - handle both dict and list formats
+            cell_counts = annotation.get('cell_counts', {})
+            if cell_counts:
+                cell_types_df = pd.DataFrame({
+                    'Cell Type': list(cell_counts.keys()),
+                    'Count': list(cell_counts.values())
+                }).sort_values('Count', ascending=False)
+                
+                st.dataframe(cell_types_df, use_container_width=True)
+                st.bar_chart(cell_types_df.set_index('Cell Type'))
+            else:
+                # Fallback: count from adata
+                cell_type_counts = adata.obs['cell_type'].value_counts().reset_index()
+                cell_type_counts.columns = ['Cell Type', 'Count']
+                st.dataframe(cell_type_counts, use_container_width=True)
+                st.bar_chart(cell_type_counts.set_index('Cell Type'))
+        else:
+            st.info("No annotation results available.")
     
     with tab4:
         st.subheader("Differential Expression")
         if 'de_analysis' in results:
-            if results['de_analysis']['n_groups'] == 0:
+            if results['de_analysis'].get('n_groups', 0) == 0:
                 st.warning("DE analysis skipped: Some cell types had too few cells for statistical comparison.")
                 st.info("This is normal for rare cell types. The annotation still worked correctly.")
             else:
-                st.write(f"Analyzed {results['de_analysis']['n_groups']} groups")
+                st.write("Analyzed {} groups".format(results['de_analysis']['n_groups']))
                 
                 # Select group to view
-                group = st.selectbox("Select cell type", results['de_analysis']['groups'])
-                
-                # Load and display DE results
-                safe_name = group.replace(' ', '_').replace('/', '_').replace('+', 'pos')
-                de_file = f"outputs/de_{safe_name}.csv"
-                if Path(de_file).exists():
-                    de_df = pd.read_csv(de_file)
-                    if de_df.empty:
-                        st.warning("No DE results available for this group.")
-                    else:
-                        st.dataframe(de_df.head(20), use_container_width=True)
+                groups = results['de_analysis'].get('groups', [])
+                if groups:
+                    group = st.selectbox("Select cell type", groups)
                     
-                    # Volcano plot
-                    fig, ax = plt.subplots(figsize=(10, 6))
-                    
-                    # Clean data - remove NaN values
-                    clean_df = de_df.dropna(subset=['logfoldchanges', 'pvals_adj', 'scores'])
-                    
-                    if len(clean_df) == 0:
-                        st.warning("No valid data points for volcano plot after removing NaN values.")
-                    else:
-                        # Replace 0 p-values with very small number
-                        pvals_clean = clean_df['pvals_adj'].replace(0, 1e-300)
+                    # Load and display DE results
+                    safe_name = group.replace(' ', '_').replace('/', '_').replace('+', 'pos')
+                    de_file = "outputs/de_{}.csv".format(safe_name)
+                    if Path(de_file).exists():
+                        de_df = pd.read_csv(de_file)
+                        if de_df.empty:
+                            st.warning("No DE results available for this group.")
+                        else:
+                            st.dataframe(de_df.head(20), use_container_width=True)
                         
-                        scatter = ax.scatter(
-                            clean_df['logfoldchanges'], 
-                            -np.log10(pvals_clean),
-                            c=clean_df['scores'],
-                            cmap='viridis',
-                            alpha=0.6,
-                            edgecolors='none'
-                        )
-                        ax.set_xlabel('Log2 Fold Change')
-                        ax.set_ylabel('-Log10 Adjusted P-value')
-                        ax.set_title(f'DE Genes: {group}')
-                        ax.axhline(y=-np.log10(0.05), color='r', linestyle='--', label='p=0.05')
-                        ax.legend()
-                        plt.colorbar(scatter, label='Score')
-                        st.pyplot(fig)
+                        # Volcano plot
+                        if not de_df.empty and 'logfoldchanges' in de_df.columns:
+                            fig, ax = plt.subplots(figsize=(10, 6))
+                            
+                            # Clean data - remove NaN values
+                            clean_df = de_df.dropna(subset=['logfoldchanges', 'pvals_adj', 'scores'])
+                            
+                            if len(clean_df) == 0:
+                                st.warning("No valid data points for volcano plot after removing NaN values.")
+                            else:
+                                # Replace 0 p-values with very small number
+                                pvals_clean = clean_df['pvals_adj'].replace(0, 1e-300)
+                                
+                                scatter = ax.scatter(
+                                    clean_df['logfoldchanges'], 
+                                    -np.log10(pvals_clean),
+                                    c=clean_df['scores'],
+                                    cmap='viridis',
+                                    alpha=0.6,
+                                    edgecolors='none'
+                                )
+                                ax.set_xlabel('Log2 Fold Change')
+                                ax.set_ylabel('-Log10 Adjusted P-value')
+                                ax.set_title('DE Genes: {}'.format(group))
+                                ax.axhline(y=-np.log10(0.05), color='r', linestyle='--', label='p=0.05')
+                                ax.legend()
+                                plt.colorbar(scatter, label='Score')
+                                st.pyplot(fig)
+                    else:
+                        st.warning("DE file not found: {}".format(de_file))
         else:
             st.info("DE analysis not available.")
     
@@ -234,25 +251,27 @@ def display_results(results, adata):
         st.subheader("Download Results")
         
         # Download processed data
-        with open(results['output_path'], "rb") as f:
-            st.download_button(
-                "📥 Download Processed Data (.h5ad)",
-                f,
-                file_name="cellscribe_results.h5ad",
-                mime="application/octet-stream"
-            )
+        if Path(results['output_path']).exists():
+            with open(results['output_path'], "rb") as f:
+                st.download_button(
+                    "📥 Download Processed Data (.h5ad)",
+                    f,
+                    file_name="cellscribe_results.h5ad",
+                    mime="application/octet-stream"
+                )
         
         # Download plots
         if 'plots' in results:
             for plot_name, plot_path in results['plots'].items():
-                if plot_path.endswith('.png'):
+                if plot_path.endswith('.png') and Path(plot_path).exists():
                     with open(plot_path, "rb") as f:
                         st.download_button(
-                            f"📥 Download {plot_name}",
+                            "📥 Download {}".format(plot_name),
                             f,
-                            file_name=f"{plot_name}.png",
+                            file_name="{}.png".format(plot_name),
                             mime="image/png"
                         )
+
 
 if __name__ == "__main__":
     main()
