@@ -498,27 +498,23 @@ cellscribe/
 
 ### 1. Pipeline Overview Dashboard
 <!-- ![Pipeline Dashboard](docs/screenshots/landing_page.png) -->
-*Coming soon: Main dashboard showing pipeline status and dataset summary*
 
 ### 2. UMAP Visualization with Cell Type Annotations
 <!-- ![UMAP Plot](docs/screenshots/umap.png) -->
-*Coming soon: Interactive UMAP plot colored by predicted cell types*
 
 ### 3. Quality Control Metrics
 <!-- ![QC Metrics](docs/screenshots/QC_metrics.png) -->
-*Coming soon: QC violin plots and filtering thresholds*
+
 
 ### 4. Differential Expression Analysis
 <!-- ![DE Analysis](docs/screenshots/DE_analysis.png) -->
-*Coming soon: Volcano plot and heatmap of marker genes*
+
 
 ### 5. Cell Type Annotation Results
 <!-- ![Annotation Results](docs/screenshots/cell_types.png) -->
-*Coming soon: Annotation confidence scores and comparison table*
 
 ### 6. Download Report
 <!-- ![HTML Report](docs/screenshots/Downloads.png) -->
-*Coming soon: Sample of the generated analysis report*
 
 ---
 
