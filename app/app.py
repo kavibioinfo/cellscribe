@@ -14,8 +14,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from cellscribe.pipeline import CellScribePipeline
 
-favicon_path = str(Path(__file__).parent.parent / "favicon.png")
-
 st.set_page_config(
     page_title="CellScribe",
     page_icon="🧬",
