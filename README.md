@@ -4,8 +4,8 @@
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Bioinformatics](https://img.shields.io/badge/Domain-Bioinformatics-ff69b4)](https://github.com/ayushnexa)
-[![scRNA-seq](https://img.shields.io/badge/Technology-scRNA--seq-orange)](https://github.com/ayushnexa)
+[![Bioinformatics](https://img.shields.io/badge/Domain-Bioinformatics-ff69b4)](https://github.com/kavibioinfo)
+[![scRNA-seq](https://img.shields.io/badge/Technology-scRNA--seq-orange)](https://github.com/kavibioinfo)
 
 ---
 
@@ -136,7 +136,7 @@ Built with scalability in mind, CellScribe handles datasets ranging from thousan
 
 ```bash
 # Clone the repository
-git clone https://github.com/ayushnexa/cellscribe.git
+git clone https://github.com/kavibioinfo/cellscribe.git
 cd cellscribe
 
 # Create virtual environment
@@ -417,6 +417,14 @@ cellscribe/
 │   └── test_annotation.py
 │
 ├── 📁 docs/                        # Documentation
+│   ├── screenshots/                # UI Screenshots
+│   │   ├── landing_page.png
+│   │   ├── pipeline.png
+│   │   ├── cell_types.PNG
+│   │   ├── QC_metrics2.PNG
+│   │   ├── DE_analysis.PNG
+│   │   ├── performance.png
+│   │   └── Downloads.PNG
 │   ├── architecture.md
 │   ├── api_reference.md
 │   └── tutorials/
@@ -494,27 +502,33 @@ cellscribe/
 
 ## 🖼️ Screenshots
 
-> **Note:** Screenshots will be added here to showcase the CellScribe interface and results.
+### 1. Landing Page
+![Landing Page](docs/screenshots/landing_page.png)
+*CellScribe web interface landing page with dataset upload and pipeline selection.*
 
-### 1. Pipeline Overview Dashboard
-<!-- ![Pipeline Dashboard](docs/screenshots/landing_page.png) -->
+### 2. Pipeline Overview Dashboard
+![Pipeline Dashboard](docs/screenshots/pipeline.png)
+*Main dashboard showing the complete CellScribe analysis pipeline workflow.*
 
-### 2. UMAP Visualization with Cell Type Annotations
-<!-- ![UMAP Plot](docs/screenshots/umap.png) -->
+### 3. Cell Type Annotation Results
+![Cell Type Annotations](docs/screenshots/cell_types.PNG)
+*UMAP visualization with AI-predicted cell type annotations and confidence scores.*
 
-### 3. Quality Control Metrics
-<!-- ![QC Metrics](docs/screenshots/QC_metrics.png) -->
+### 4. Quality Control Metrics
+![QC Metrics](docs/screenshots/QC_metrics2.PNG)
+*Quality control violin plots showing mitochondrial content, gene counts, and UMI distributions.*
 
+### 5. Differential Expression Analysis
+![DE Analysis](docs/screenshots/DE_analysis.PNG)
+*Volcano plot and heatmap visualizing differentially expressed marker genes across clusters.*
 
-### 4. Differential Expression Analysis
-<!-- ![DE Analysis](docs/screenshots/DE_analysis.png) -->
+### 6. Performance & Benchmarks
+![Performance](docs/screenshots/performance.png)
+*Performance metrics and runtime benchmarks across different dataset sizes.*
 
-
-### 5. Cell Type Annotation Results
-<!-- ![Annotation Results](docs/screenshots/cell_types.png) -->
-
-### 6. Download Report
-<!-- ![HTML Report](docs/screenshots/Downloads.png) -->
+### 7. Data Downloads & Exports
+![Downloads](docs/screenshots/Downloads.PNG)
+*Export interface for downloading annotated data, reports, and visualizations in multiple formats.*
 
 ---
 
@@ -636,10 +650,10 @@ If you use CellScribe in your research, please cite:
 
 ```bibtex
 @software{cellscribe2026,
-  author = {Your Name},
+  author = {Kavi Bioinfo},
   title = {CellScribe: AI-Powered Single-Cell Transcriptomics Analysis},
   year = {2026},
-  url = {https://github.com/ayushnexa/cellscribe}
+  url = {https://github.com/kavibioinfo/cellscribe}
 }
 ```
 
@@ -679,11 +693,9 @@ SOFTWARE.
 
 **Avinash**
 
-- 🌐 Website: [https://cellscibe.ayushnexa.com]
-- 💼 LinkedIn:[www.linkedin.com/in/ayushnexaofficial]
-- 🐙 GitHub | [github.com/kavibioinfo]
+- 🌐 GitHub:[https://github.com/kavibioinfo]
+- 💼 LinkedIn | [www.linkedin.com/in/ayushnexaofficial] |
 - 📧 Email: kavibioinfo@gmail.com
-
 ### Connect & Collaborate
 
 Feel free to reach out for:
@@ -707,6 +719,6 @@ Feel free to reach out for:
 
 **⭐ Star this repository if you find it helpful! ⭐**
 
-Built with ❤️ by [AyushNexa](https://ayushnexa.com)
+Built with ❤️ by [AyushNexa](https://cellscribe.ayushnexa.com)
 
 </div>
