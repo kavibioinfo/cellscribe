@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 WORKDIR /app
 
@@ -6,21 +6,17 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     build-essential \
     libhdf5-dev \
-    libffi-dev \
-    libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip and build tools
+# Copy requirements and install
 COPY requirements.txt .
-RUN pip install --upgrade pip setuptools wheel
-RUN pip install --no-cache-dir --upgrade pip setuptools wheel
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Python packages using PEP 517
-RUN pip install --prefer-binary -r requirements.txt
-
-# Copy the rest of the app
+# Copy app code
 COPY . .
 
-# Use the port that Render provides
-EXPOSE $PORT
+# Expose port
+EXPOSE 8501
+
+# Run Streamlit
 CMD ["sh", "-c", "streamlit run app/app.py --server.port=$PORT --server.address=0.0.0.0"]
